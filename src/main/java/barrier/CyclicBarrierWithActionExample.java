@@ -1,5 +1,7 @@
 package barrier;
 
+import barrier.action.CustomAction;
+import barrier.action.UserAction;
 import barrier.task.PostService;
 import domain.Parcel;
 import repository.ParcelRepository;
@@ -13,7 +15,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Andrei Kuzniatsou on 15.02.2016.
  */
-public class CyclicBarrierExample {
+public class CyclicBarrierWithActionExample {
 
     private static Repository<Parcel> PARCEL_REPOSITORY = new ParcelRepository();
 
@@ -22,12 +24,13 @@ public class CyclicBarrierExample {
         ExecutorService executor = Executors.newCachedThreadPool();
 
         List<Parcel> parcels = PARCEL_REPOSITORY.findAll();
-        CyclicBarrier barrier = new CyclicBarrier(parcels.size());
+
+        CyclicBarrier customBarrier = new CyclicBarrier(parcels.size(), new CustomAction(parcels));
+        CyclicBarrier userBarrier = new CyclicBarrier(parcels.size(), new UserAction(parcels));
 
         for (Parcel parcel : parcels) {
-            executor.execute(new PostService(barrier, barrier, parcel));
+            executor.execute(new PostService(customBarrier, userBarrier, parcel));
         }
         executor.shutdown();
     }
 }
-

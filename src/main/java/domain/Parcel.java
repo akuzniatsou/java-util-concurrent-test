@@ -5,14 +5,20 @@ package domain;
  */
 public class Parcel {
 
+    private int id;
     private String to;
     private String from;
     private String description;
 
-    public Parcel(String to, String from, String description) {
+    public Parcel(int id, String to, String from, String description) {
+        this.id = id;
         this.to = to;
         this.from = from;
         this.description = description;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTo() {

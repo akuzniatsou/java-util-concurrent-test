@@ -1,0 +1,31 @@
+package barrier.action;
+
+import domain.Parcel;
+import util.GeneratingUtil;
+
+import java.util.List;
+
+/**
+ * Created by Andrei Kuzniatsou on 15.02.2016.
+ */
+public class UserAction implements Runnable {
+
+    private List<Parcel> parcels;
+
+    public UserAction(List<Parcel> parcels) {
+        this.parcels = parcels;
+    }
+
+    @Override
+    public void run() {
+        try {
+            for (Parcel parcel : parcels) {
+                System.out.println("Getting the Parcel #" + parcel.getId());
+                Thread.sleep(GeneratingUtil.getValueFromRange(1_000, 5_000));
+                System.out.println(parcel.getTo() + " has got the Parcel #" + parcel.getId()+" with " + parcel.getDescription());
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
