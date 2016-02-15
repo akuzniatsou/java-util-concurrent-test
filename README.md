@@ -1,2 +1,2 @@
 # java-util-concurrent-test
-java.util.concurrent.* test progect
+java.util.concurrent.* test project
