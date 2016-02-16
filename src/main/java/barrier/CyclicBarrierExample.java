@@ -1,6 +1,6 @@
 package barrier;
 
-import barrier.task.PostService;
+import barrier.task.SimplePostService;
 import domain.Parcel;
 import repository.ParcelRepository;
 import repository.Repository;
@@ -25,7 +25,7 @@ public class CyclicBarrierExample {
         CyclicBarrier barrier = new CyclicBarrier(parcels.size());
 
         for (Parcel parcel : parcels) {
-            executor.execute(new PostService(barrier, barrier, parcel));
+            executor.execute(new SimplePostService(barrier, barrier, parcel));
         }
         executor.shutdown();
     }
