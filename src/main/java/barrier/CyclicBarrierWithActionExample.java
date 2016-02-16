@@ -8,6 +8,7 @@ import repository.ParcelRepository;
 import repository.Repository;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,11 +26,16 @@ public class CyclicBarrierWithActionExample {
 
         List<Parcel> parcels = PARCEL_REPOSITORY.findAll();
 
-        CyclicBarrier customBarrier = new CyclicBarrier(parcels.size(), new CustomAction(parcels));
-        CyclicBarrier userBarrier = new CyclicBarrier(parcels.size(), new UserAction(parcels));
+        List<Parcel> storage = new CopyOnWriteArrayList<>();
+
+        CustomAction barrierAction = new CustomAction(storage);
+        UserAction userAction = new UserAction(storage);
+
+        CyclicBarrier customBarrier = new CyclicBarrier(parcels.size(), barrierAction);
+        CyclicBarrier userBarrier = new CyclicBarrier(parcels.size(), userAction);
 
         for (Parcel parcel : parcels) {
-            executor.execute(new PostService(customBarrier, userBarrier, parcel));
+            executor.execute(new PostService(customBarrier, userBarrier, parcel, storage));
         }
         executor.shutdown();
     }
